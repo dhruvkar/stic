@@ -379,7 +379,7 @@ def main(testserver, verbose=False):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog="stic", description="Generate a static site and, optionally, test it locally.")
     parser.add_argument("-t", "--test", action="store_true", default=False, 
-        dest='testserver', help="start a server to test out site locally")
+        dest='testserver', help="Generate site and start a server to test out site locally")
     parser.add_argument("-v", "--verbose", action="store_true", 
         default=False, dest='verbose', help="display and ask user to verify each step")
     parser.add_argument("-V", "--version", action='version', version="stic {0}".format(__version__))

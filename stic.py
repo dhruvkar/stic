@@ -354,18 +354,26 @@ def main(testserver, verbose=False):
     """
     Converts, injects and deploys relevant files.
     """
-    f = _folder_structure()
-    raw_input("Check to see if all folders have been created.")
-    convert()
-    raw_input("Check to see if HTML files have been created from the markdown files.")
-    x = deploy_articles()
-    raw_input("Check to see if the new HTML files have been moved to the public folder.")
-    y = deploy_assets()
-    raw_input("Check to see if assets folder has been copied.")
+    if verbose == True:
+        f = _folder_structure()
+        raw_input("Check to see if all folders have been created.")
+        convert()
+        raw_input("Check to see if HTML files have been created from the markdown files.")
+        x = deploy_articles()
+        raw_input("Check to see if the new HTML files have been moved to the public folder.")
+        y = deploy_assets()
+        raw_input("Check to see if assets folder has been copied.")
+    else:
+        f = _folder_structure()
+        convert()
+        x = deploy_articles()
+        y = deploy_assets()
+
     if testserver == True:
         testserve()
     else:
         pass
+
 
 
 if __name__ == '__main__':

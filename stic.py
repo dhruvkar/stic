@@ -300,7 +300,7 @@ def deploy_articles():
     
     new_paths = []
     for f in md_files:
-        article_path = _mkdir_p(os.path.join(public_folder, os.path.splitext(f['name'])[0]))
+        article_path = _mkdir_p(os.path.join(public_folder, articles_folder, os.path.splitext(f['name'])[0]))
         dest = os.path.join(article_path, "index.html")
         print dest
         new_paths.append(dest)

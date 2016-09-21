@@ -1,7 +1,8 @@
 ## stic: a hackable static site generator script
 
-### Warning: This is the first release and it's ugly but works. Use at your own risk.
+##### Warning: This is the first release and it's ugly but works. Use at your own risk.
 
+___
 
 **Why, Why, Oh Why another static site generator?**
 
@@ -9,13 +10,15 @@ I built this partly to learn, and partly because I didn't know what type of site
 I wanted to be able modify the generator as my needs changed and didn't want to install then keep modifying a package. 
 A script fit the bill.
 
+____
+
 **What it does**
 
 stic does three things:
 
 1. Generates a folder structure, if it doesn't exist already (see below). If you don't have one of the folders below, it'll generate it, otherwise leave will leave the folder structure alone.
 
-```
+..*```
 -public
 -assets
 -templates
@@ -25,6 +28,7 @@ stic does three things:
 2. Converts all .md files in the *articles* folder to HTML using a template in *templates* folder.
 3. Move all converted HTML files, and copy everything from the assets folder to the *public* folder.
 
+____
 
 **Dependencies**
 
@@ -32,6 +36,7 @@ stic does three things:
 1. python-markdown
 1. jinja2
 
+____
 
 **Getting Started**
 
@@ -40,9 +45,14 @@ stic does three things:
 3. Make it executable `chmod +x stic.py`
 4. Run it `./stic.py -t`
 
+____
 
-**Other Options**
+**Rules and Options**
 
 See all options by:
 
 `./stic.py -h`
+
+
+All markdown files to be converted need to have the extension **.md**
+All templates use jinja and need to have the extension **.jinja2**

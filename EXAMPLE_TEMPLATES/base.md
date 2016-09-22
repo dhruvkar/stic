@@ -1,9 +1,9 @@
 ---
 title: Test Title
-author: Dhruv Kar
-original_date: 2016.09.14
+author: 
+date:
 description: This is the description
-url: https://dhruvkar.com/articles/test
+url:
 ---
 [TOC]
 

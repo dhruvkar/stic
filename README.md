@@ -44,8 +44,8 @@ ____
 
 1. Install dependencies: `pip install markdown jinja2`
 2. Copy `stic.py` to the root folder of your site. i.e. right alongside the *public, assets, templates, articles* folders.
-3. Make it executable: `chmod +x stic.py`
-4. Run it: `./stic.py -t`
+3. Make it executable: `chmod +x stic`
+4. Run it: `./stic -t`
 
 ____
 
@@ -53,7 +53,7 @@ ____
 
 See all options by:
 
-`./stic.py -h`
+`./stic -h`
 
 
 All markdown files to be converted need to have the extension **.md**

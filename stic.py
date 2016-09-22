@@ -60,7 +60,6 @@ EXTENSION_CONFIGS = {
     },
     'markdown.extensions.toc': {
         'baselevel': '2',
-        'anchorlink': 'False'
     }
 }
 
@@ -171,12 +170,14 @@ def _folder_structure():
             actual_folders[k] = h[0]
         elif len(h) == 1 and not os.path.isdir(h[0]):
             print "There is a {0} file in this folder, which is clashing with the {0} folder. Rename/remove this file.".format(k)
+            sys.exit(1)
         elif len(h) == 0:
             os.mkdir(k)
             actual_folders[k] = k
             print "Created '{0}' folder.".format(k)
         else:
-            print "There are multiple files/folders with name {0}. Rename/remove these files/folders.".format(k)
+            print "There are multiple files/folders with name '{0}'. Rename/remove these files/folders.".format(k)
+            sys.exit(1)
     
     return actual_folders
 
@@ -245,16 +246,14 @@ def _clean_meta_data(md_meta_dict):
     return new_meta_dict
 
 
-    
-
 def _convert_one_markdown(file_path):
     """
     Convert one markdown to html.
     """
 
-    chars, headers = _check_headers(file_path)
-    if chars >= 1000 and headers >= 4:
-        EXTENSION_CONFIGS['markdown.extensions.toc']['anchorlink'] = True
+    #chars, headers = _check_headers(file_path)
+    #if chars >= 1000 and headers >= 4:
+    #    EXTENSION_CONFIGS['markdown.extensions.toc']['anchorlink'] = True
     
     output_file = os.path.join(os.path.split(file_path)[0], os.path.splitext(os.path.split(file_path)[1])[0] + ".html")
     md = markdown.Markdown(extensions=EXTENSIONS, extension_configs=EXTENSION_CONFIGS, output_format="html5")
@@ -281,9 +280,9 @@ def convert(filetype="markdown"):
     """
     Converts all markdown files into HTML files in the ARTICLE_FOLDERS.
     """
-    
+    articles_folder = _folder_structure()['articles']
     # Only for markdown files currently.
-    files = _find(filetype)
+    files = _find(filetype, articles_folder)
     if filetype == "markdown":
         for f in files:
             x = _convert_one_markdown(f['path']) 
@@ -302,7 +301,7 @@ def deploy_articles():
     for f in md_files:
         article_path = _mkdir_p(os.path.join(public_folder, articles_folder, os.path.splitext(f['name'])[0]))
         dest = os.path.join(article_path, "index.html")
-        print dest
+        print "{0} --> {1}".format(f['name'], dest)
         new_paths.append(dest)
         shutil.move(f['path'], dest)
     
@@ -337,6 +336,7 @@ def testserve(port=TEST_PORT):
  
     if not os.path.exists("public"):
         print "A 'public' directory does not exist. If you haven't deployed, try that before testing."
+        sys.exit(1)
     else:
         pwd = os.getcwd()
         try:
@@ -350,11 +350,18 @@ def testserve(port=TEST_PORT):
         finally:
             os.chdir(pwd)
 
+
+
 def main(testserver, verbose=False):
     """
     Converts, injects and deploys relevant files.
     """
-    if verbose == True:
+    if verbose == False:
+        f = _folder_structure()
+        convert()
+        x = deploy_articles()
+        y = deploy_assets()
+    else:
         f = _folder_structure()
         raw_input("Check to see if all folders have been created.")
         convert()
@@ -363,25 +370,20 @@ def main(testserver, verbose=False):
         raw_input("Check to see if the new HTML files have been moved to the public folder.")
         y = deploy_assets()
         raw_input("Check to see if assets folder has been copied.")
-    else:
-        f = _folder_structure()
-        convert()
-        x = deploy_articles()
-        y = deploy_assets()
-
+    
     if testserver == True:
         testserve()
     else:
         pass
 
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog="stic", description="Generate a static site and, optionally, test it locally.")
     parser.add_argument("-t", "--test", action="store_true", default=False, 
-        dest='testserver', help="generate site and start a server to test out site locally")
+        dest='testserver', help="start a server to serve your 'public' folder")
     parser.add_argument("-v", "--verbose", action="store_true", 
-        default=False, dest='verbose', help="generate site while displaying and asking user to verify each step")
+        default=False, dest='verbose', help="generate static site while displaying and asking user to verify each step")
     parser.add_argument("-V", "--version", action='version', version="stic {0}".format(__version__))
     args = parser.parse_args()
     main(args.testserver, args.verbose)
+

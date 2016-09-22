@@ -43,7 +43,7 @@ ____
 ### Getting Started
 
 1. Install dependencies: `pip install markdown jinja2`
-2. Copy `stic.py` to the root folder of your site. i.e. right alongside the *public, assets, templates, articles* folders.
+2. Copy `stic` to the root folder of your site. i.e. right alongside the *public, assets, templates, articles* folders.
 3. Make it executable: `chmod +x stic`
 4. Run it: `./stic -t`
 

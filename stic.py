@@ -70,7 +70,7 @@ JINJA_EXTENSION = ["jinja2", "jinja", "j2"]
 BASE_FOLDER = "."
 TEMPLATE_FOLDERS = ["templates", "template", "layout", "layouts", "_templates", "_layouts"]
 ARTICLE_FOLDERS = ["articles", "article", "blog", "blogs", "notes", "note", "posts", "post", "_notes", "_articles", "_posts", "_blog"]
-ASSETS_FOLDERS = ["static", "assets"]
+ASSETS_FOLDERS = ["static", "assets", "_static", "_assets"]
 DEPLOY_FOLDERS = ["public"]
 PAGE_FOLDERS = ['_pages', 'pages', 'page', '_page']
 

@@ -368,6 +368,26 @@ def deploy_pages():
     return new_paths
     
 
+def handle_acme():
+    acpaths = []
+    wk = ".well-known"
+    pages_folder = _folder_structure()['pages']    
+
+    for dirpath, dirnames, filenames in os.walk(pages_folder):
+         if wk in dirnames:
+             acpaths.append(os.path.join(dirpath, wk))
+    if len(acpaths) == 1:
+        dst = os.path.join(_folder_structure()['public'], wk)
+        x = copy_tree(acpaths[0], dst)
+        print "found one .well-known folder ({0}). deploying to {1}".format(acpaths[0], x)
+    elif len(acpaths) == 0:
+        print "no acme challenge detected"
+    else:
+        print "mulitple .well-known folders detected. delete all but one .well-known. not deploying."
+        for a in acpaths:
+            print a
+
+
 def testserve(port=TEST_PORT):
     """
     Serves up the 'public' directory if it exists. Should be the same as what you'd see once live."
@@ -398,6 +418,7 @@ def main(testserver, verbose=False):
     if verbose == False:
         f = _folder_structure()
         convert()
+        a = handle_acme()
         x = deploy_articles()
         y = deploy_assets()
         z = deploy_pages()
@@ -406,6 +427,8 @@ def main(testserver, verbose=False):
         raw_input("Check to see if all folders have been created.")
         convert()
         raw_input("Check to see if HTML files have been created from the markdown files.")
+        a = handle_acme()
+        raw_input("Check to see if the .well-known folder has been copied to public.")
         x = deploy_articles()
         raw_input("Check to see if the new HTML files have been moved to the public folder.")
         y = deploy_assets()

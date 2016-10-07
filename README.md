@@ -25,10 +25,11 @@ stic does three things:
 -assets
 -templates
 -articles
+-pages
 ```
 
 * Converts all .md files in the *articles* folder to HTML using a template in *templates* folder.
-* Move all converted HTML files, and copy everything from the *assets* folder to the *public* folder.
+* Moves all (converted) HTML files from *articles* and copies everything from *assets* & *pages* to the *public* folder.
 
 ____
 

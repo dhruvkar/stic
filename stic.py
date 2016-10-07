@@ -334,8 +334,8 @@ def deploy_assets():
 
 def clean_folder_name(folder_name):
     if folder_name.startswith("_"):
-        new_folder_name = folder_name.split("_")[1]
-    return new_folder_name
+        folder_name = folder_name.split("_")[1]
+    return folder_name
 
 
 def deploy_pages():

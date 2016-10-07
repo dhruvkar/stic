@@ -72,6 +72,7 @@ TEMPLATE_FOLDERS = ["templates", "template", "layout", "layouts", "_templates", 
 ARTICLE_FOLDERS = ["articles", "article", "blog", "blogs", "notes", "note", "posts", "post", "_notes", "_articles", "_posts", "_blog"]
 ASSETS_FOLDERS = ["static", "assets"]
 DEPLOY_FOLDERS = ["public"]
+PAGE_FOLDERS = ['_pages', 'pages', 'page', '_page']
 
 ARTICLE_TEMPLATE = "base.jinja2"
 
@@ -156,28 +157,32 @@ def _mkdir_p(path):
             raise
 
 
-def _folder_structure():
+def _folder_structure(test=False):
     """
     Returns the actual folders, creates them if they don't exist or lets user know if there's a clash.
     """
     
-    possible_folders = {'articles': ARTICLE_FOLDERS, 'templates': TEMPLATE_FOLDERS, 'assets': ASSETS_FOLDERS, 'public': DEPLOY_FOLDERS}
+    possible_folders = {'articles': ARTICLE_FOLDERS, 'templates': TEMPLATE_FOLDERS, 'assets': ASSETS_FOLDERS, 'public': DEPLOY_FOLDERS, 'pages': PAGE_FOLDERS}
     actual_folders = {}
 
-    for k, v in possible_folders.items():
-        h = [x for x in os.listdir(".") if x.lower() in v]
-        if len(h) == 1 and os.path.isdir(h[0]):
-            actual_folders[k] = h[0]
-        elif len(h) == 1 and not os.path.isdir(h[0]):
-            print "There is a {0} file in this folder, which is clashing with the {0} folder. Rename/remove this file.".format(k)
-            sys.exit(1)
-        elif len(h) == 0:
-            os.mkdir(k)
-            actual_folders[k] = k
-            print "Created '{0}' folder.".format(k)
-        else:
-            print "There are multiple files/folders with name '{0}'. Rename/remove these files/folders.".format(k)
-            sys.exit(1)
+    if test == False: 
+        for k, v in possible_folders.items():
+            h = [x for x in os.listdir(".") if x.lower() in v]
+            if len(h) == 1 and os.path.isdir(h[0]):
+                actual_folders[k] = h[0]
+            elif len(h) == 1 and not os.path.isdir(h[0]):
+                print "There is a {0} file in this folder, which is clashing with the {0} folder. Rename/remove this file.".format(k)
+                sys.exit(1)
+            elif len(h) == 0:
+                os.mkdir(k)
+                actual_folders[k] = k
+                print "Created '{0}' folder.".format(k)
+            else:
+                print "There are multiple files/folders with name '{0}'. Rename/remove these files/folders.".format(k)
+                sys.exit(1)
+    else:
+        for k, v in possible_folders.items():
+            actual_folders[k] = k    
     
     return actual_folders
 
@@ -280,6 +285,7 @@ def convert(filetype="markdown"):
     """
     Converts all markdown files into HTML files in the ARTICLE_FOLDERS.
     """
+    pages_folder  = _folder_structure()['pages']
     articles_folder = _folder_structure()['articles']
     # Only for markdown files currently.
     files = _find(filetype, articles_folder)
@@ -301,7 +307,7 @@ def deploy_articles():
     for f in md_files:
         article_path = _mkdir_p(os.path.join(public_folder, articles_folder, os.path.splitext(f['name'])[0]))
         dest = os.path.join(article_path, "index.html")
-        print "{0} --> {1}".format(f['name'], dest)
+        print "{0}              --> {1}".format(f['name'], dest)
         new_paths.append(dest)
         shutil.move(f['path'], dest)
     
@@ -324,9 +330,30 @@ def deploy_assets():
         e = sys.exc_info()[0]
         print e
 
-#TODO method to deploy all other pages.
 def deploy_pages():
-    pass
+    """
+    Copy pages, and deploy them appropriately in the public folder.
+    """
+    specialpages = ['404.html', '403.html', 'index.html']
+
+    pages_folder = _folder_structure()['pages']
+    public_folder = _folder_structure()['public']
+
+    page_files = _find("html", pages_folder)
+    
+    new_paths = []
+ 
+    for f in page_files:
+        if f['name'] not in specialpages:
+            page_path = _mkdir_p(os.path.join(public_folder, pages_folder, os.path.splitext(f['name'])[0]))
+            dest = os.path.join(page_path, "index.html")
+        else:
+            page_path = _mkdir_p(os.path.join(public_folder, pages_folder))
+            dest = os.path.join(page_path, f['name'])
+        print "{0}          --> {1}".format(f['name'], dest)
+        new_paths.append(dest)
+    
+    return new_paths
     
 
 def testserve(port=TEST_PORT):

@@ -74,7 +74,7 @@ ASSETS_FOLDERS = ["static", "assets", "_static", "_assets"]
 DEPLOY_FOLDERS = ["public"]
 PAGE_FOLDERS = ['_pages', 'pages', 'page', '_page']
 
-ARTICLE_TEMPLATE = "base.jinja2"
+ARTICLE_TEMPLATE = "articles.jinja2"
 
 INPUT_DATE_FORMATS = ["%Y.%m.%d", "%Y-%m-%d", "%Y/%m/%d", "%B %d, %Y", "%b %d, %Y", "%m/%d/%Y", "%m/%d/%y", "%m-%d-%y", "%m-%d-%Y", "%m.%d.%y", "%m.%d.%Y"]
 OUTPUT_DATE_FORMAT = "%b %d, %Y"
@@ -262,7 +262,8 @@ def _convert_one_markdown(file_path):
     
     output_file = os.path.join(os.path.split(file_path)[0], os.path.splitext(os.path.split(file_path)[1])[0] + ".html")
     md = markdown.Markdown(extensions=EXTENSIONS, extension_configs=EXTENSION_CONFIGS, output_format="html5")
-    
+    print "converting {0} to html".format(file_path)
+
     with open(file_path) as f:
         md_text = f.read()
     
@@ -275,7 +276,7 @@ def _convert_one_markdown(file_path):
     template_vars['content'] = html
 
     injected = _inject(ARTICLE_TEMPLATE, template_vars)
-    
+     
     with open(output_file, 'w') as g:
         g.write(injected) 
     return template_vars

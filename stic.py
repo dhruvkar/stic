@@ -129,6 +129,7 @@ def generate_ci():
     with open(gci_file, 'w') as f:
         f.write(gci_contents)
     
+    print "generated .gitlab-ci.yml file"    
     return os.path.abspath(gci_file)
         
 
@@ -185,9 +186,9 @@ def _folder_structure(test=False):
                 print "There is a {0} file in this folder, which is clashing with the {0} folder. Rename/remove this file.".format(k)
                 sys.exit(1)
             elif len(h) == 0:
-                os.mkdir(k)
+                os.mkdir("_" + k)
                 actual_folders[k] = k
-                print "Created '{0}' folder.".format(k)
+                print "Created '{0}' folder.".format("_" + k)
             else:
                 print "There are multiple files/folders with name '{0}'. Rename/remove these files/folders.".format(k)
                 sys.exit(1)

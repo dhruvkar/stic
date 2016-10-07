@@ -122,6 +122,16 @@ def _find(filetype, path=BASE_FOLDER):
     return _files
 
 
+def generate_ci():
+    gci_file = ".gitlab-ci.yml"
+    gci_contents = "pages:\n  artifacts:\n    paths:\n    - public\n  only:\n  - master\n"
+
+    with open(gci_file, 'w') as f:
+        f.write(gci_contents)
+    
+    return os.path.abspath(gci_file)
+        
+
 def _check_headers(mdfile):
     """
     Return number of characters and number of headers in a markdown file.
@@ -422,6 +432,7 @@ def main(testserver, verbose=False):
         f = _folder_structure()
         convert()
         a = handle_acme()
+        g = generate_ci()
         x = deploy_articles()
         y = deploy_assets()
         z = deploy_pages()
@@ -432,6 +443,8 @@ def main(testserver, verbose=False):
         raw_input("Check to see if HTML files have been created from the markdown files.")
         a = handle_acme()
         raw_input("Check to see if the .well-known folder has been copied to public.")
+        g = generate_ci()
+        raw_input("Check to see if a Gitlab Continuous Integration file (.gitlab-ci.yml) was generated.")
         x = deploy_articles()
         raw_input("Check to see if the new HTML files have been moved to the public folder.")
         y = deploy_assets()

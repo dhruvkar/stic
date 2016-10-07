@@ -345,14 +345,17 @@ def deploy_pages():
     """
     specialpages = ['robots.txt', 'keybase.txt', '404.html', '403.html', 'index.html']
     page_files = []
+    new_paths = []
     pages_folder = _folder_structure()['pages']
     public_folder = _folder_structure()['public']
+    
+    pages = _find("html", pages_folder)
+    for p in pages:
+        if p['path'].split("/")[1] != ".well-known":
+            page_files.append(p)  
 
-    page_files.extend(_find("html", pages_folder))
     page_files.extend(_find("txt", pages_folder))
     
-    new_paths = []
- 
     for f in page_files:
         if f['name'] in specialpages:
             dest = os.path.join(public_folder, f['name']) 
@@ -381,7 +384,7 @@ def handle_acme():
         x = copy_tree(acpaths[0], dst)
         print "found one .well-known folder ({0}). deploying to {1}".format(acpaths[0], x)
     elif len(acpaths) == 0:
-        print "no acme challenge detected"
+        print "no acme challenge page detected"
     else:
         print "mulitple .well-known folders detected. delete all but one .well-known. not deploying."
         for a in acpaths:

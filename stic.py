@@ -117,7 +117,8 @@ def _find(filetype, path=BASE_FOLDER):
                 if f.lower().endswith(tuple(JINJA_EXTENSIONS)):
                     _files.append({"path": os.path.join(dirpath, f), "name": f})
             else:
-                pass 
+                if f.lower().endswith(filetype):
+                    _files.append({"path": os.path.join(dirpath, f), "name": f})
     return _files
 
 
@@ -343,11 +344,12 @@ def deploy_pages():
     Copy pages, and deploy them appropriately in the public folder.
     """
     specialpages = ['robots.txt', 'keybase.txt', '404.html', '403.html', 'index.html']
-
+    page_files = []
     pages_folder = _folder_structure()['pages']
     public_folder = _folder_structure()['public']
 
-    page_files = _find("html", pages_folder)
+    page_files.extend(_find("html", pages_folder))
+    page_files.extend(_find("txt", pages_folder))
     
     new_paths = []
  
@@ -359,7 +361,7 @@ def deploy_pages():
             dest = os.path.join(page_path, "index.html")
         
         print "{0}          --> {1}".format(f['name'], dest)
-        shutil.move(f['path'], dest)
+        shutil.copy2(f['path'], dest)
         
         new_paths.append(dest)
     
@@ -408,7 +410,7 @@ def main(testserver, verbose=False):
         raw_input("Check to see if the new HTML files have been moved to the public folder.")
         y = deploy_assets()
         raw_input("Check to see if assets folder has been copied.")
-        z = deploy_assets()
+        z = deploy_pages()
         raw_input("Check to see if pages have been deployed.")
     
     if testserver == True:

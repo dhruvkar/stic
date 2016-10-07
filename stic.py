@@ -306,7 +306,7 @@ def deploy_articles():
     
     new_paths = []
     for f in md_files:
-        article_path = _mkdir_p(os.path.join(public_folder, articles_folder, os.path.splitext(f['name'])[0]))
+        article_path = _mkdir_p(os.path.join(public_folder, clean_folder_name(articles_folder), os.path.splitext(f['name'])[0]))
         dest = os.path.join(article_path, "index.html")
         print "{0}              --> {1}".format(f['name'], dest)
         new_paths.append(dest)
@@ -322,7 +322,7 @@ def deploy_assets():
     assets_folder = _folder_structure()['assets']
     public_folder = _folder_structure()['public']
 
-    dest = os.path.join(public_folder, assets_folder)
+    dest = os.path.join(clean_folder_name(public_folder), clean_folder_name(assets_folder))
 
     try:
         x = copy_tree(assets_folder, dest)
@@ -331,11 +331,18 @@ def deploy_assets():
         e = sys.exc_info()[0]
         print e
 
+
+def clean_folder_name(folder_name):
+    if folder_name.startswith("_"):
+        new_folder_name = folder.split("_")[1]
+    return new_folder_name
+
+
 def deploy_pages():
     """
     Copy pages, and deploy them appropriately in the public folder.
     """
-    specialpages = ['404.html', '403.html', 'index.html']
+    specialpages = ['robots.txt', 'keybase.txt', '404.html', '403.html', 'index.html']
 
     pages_folder = _folder_structure()['pages']
     public_folder = _folder_structure()['public']
@@ -345,13 +352,15 @@ def deploy_pages():
     new_paths = []
  
     for f in page_files:
-        if f['name'] not in specialpages:
-            page_path = _mkdir_p(os.path.join(public_folder, pages_folder, os.path.splitext(f['name'])[0]))
-            dest = os.path.join(page_path, "index.html")
+        if f['name'] in specialpages:
+            dest = os.path.join(public_folder, f['name']) 
         else:
-            page_path = _mkdir_p(os.path.join(public_folder, pages_folder))
-            dest = os.path.join(page_path, f['name'])
+            page_path = _mkdir_p(os.path.join(public_folder, os.path.splitext(f['name'])[0]))
+            dest = os.path.join(page_path, "index.html")
+        
         print "{0}          --> {1}".format(f['name'], dest)
+        shutil.move(f['path'], dest)
+        
         new_paths.append(dest)
     
     return new_paths

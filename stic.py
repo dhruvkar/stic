@@ -388,6 +388,7 @@ def main(testserver, verbose=False):
         convert()
         x = deploy_articles()
         y = deploy_assets()
+        z = deploy_pages()
     else:
         f = _folder_structure()
         raw_input("Check to see if all folders have been created.")
@@ -397,6 +398,8 @@ def main(testserver, verbose=False):
         raw_input("Check to see if the new HTML files have been moved to the public folder.")
         y = deploy_assets()
         raw_input("Check to see if assets folder has been copied.")
+        z = deploy_assets()
+        raw_input("Check to see if pages have been deployed.")
     
     if testserver == True:
         testserve()

@@ -47,7 +47,6 @@ CONFIGURATION VARIABLES.
 EXTENSIONS = [
     'markdown.extensions.extra',
     'markdown.extensions.nl2br',
-    'markdown.extensions.codehilite',
     'markdown.extensions.meta',
     'markdown.extensions.sane_lists',
     'markdown.extensions.smarty',
@@ -55,11 +54,11 @@ EXTENSIONS = [
 
 
 EXTENSION_CONFIGS = {
-    'markdown.extensions.codehilite': {
-        'linenums': 'True'
-    },
+#    'markdown.extensions.codehilite': {
+#        'linenums': 'True'
+#    },
     'markdown.extensions.toc': {
-        'baselevel': '2',
+        'baselevel': '1',
     }
 }
 
